@@ -1,16 +1,3 @@
-# 读书笔记
-
-1. JavaScript 中的强制类型转换总是返回标量基本类型值，如字符串、数字和布尔值，不会返回对象和函数。而“封装”，就是为标量基本类型值封装一个相应类型的对象，但这并非严格意义上的强制类型转换。
-2. 类型转换发生在静态类型语言的编译阶段，而强制类型转换则发生在强制类型转换动态类型语言的运行时（runtime）
-3. 可以运用 JSON.stringify 会自动判别对象的循环引用的特性，直接拿来进行相关的操作
-4. JSON.stringify(source: any, replacer?: string[] | (k, v) ⇒ any)
-5. JavaScirpt 中 Toboolean 的假值，其他值可以理解为真：
-   - undefined
-   - null
-   - false
-   - +0、-0、NaN
-   - ""
-
 # git commit message 落地
 
 因为 activity-website-frontend 项目影响范围较大，故选取`template/react-pc`模板脚手架项目新开`git-commit`分支进行落地实验。
