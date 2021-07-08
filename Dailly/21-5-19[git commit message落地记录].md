@@ -8,6 +8,7 @@
 
 查阅了相关资料，选取了前端开源社区较为成熟的几个技术方案
 
+
 ### 替代 git commit 的工具
 
 选用 `commitizen`，可以用生成的`git-cz`指令替代`git commit`；选用`cz-conventional-changelog`，用 Angular 规范的 preset 约束 commit message
