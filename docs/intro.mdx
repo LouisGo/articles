@@ -1,0 +1,71 @@
+---
+sidebar_position: 1
+---
+
+# Hello :)
+
+记录点滴，**你要悄悄学习，然后惊艳所有人~💖**
+
+前期的质量可能不太行，大家伙当养成类游戏笑笑就好，胜在坚持，👴一定会猥琐发育起来的！
+
+今天是我坚持的第 <Highlight/> 天，共勉~
+
+
+<p style={{textAlign: 'center', padding: '30px 0'}}>
+  <a alt="微米" href="https://i.loli.net/2021/07/10/85V4dNMrsoF2mxz.jpg" target="_blank">
+    <img alt="微米" src="https://i.loli.net/2021/07/10/85V4dNMrsoF2mxz.jpg" style={{ width: '20rem'}}/>
+  </a>
+  <p style={{ fontWeight: 'bold' }}>微米🐱镇站</p>
+</p>
+
+___
+
+本站的文章类型主要分为以下两类：
+
+## 博客
+
+:::tip Blog 博客
+
+[个人博客](/blog)，主要存放用心的技术文章，夹带个人思考、人生感悟、职场牢骚等莫名其妙的东东
+
+:::
+
+## 创作
+
+以下打开左侧侧边栏可以选择类别进行阅读：
+
+:::note Dailly 开发日记
+
+并非真的日记，而是记录开发过程中真实遇到的刁钻问题、有必要记录的坑或者其它收获和吐槽
+
+:::
+
+:::note Reading Notes 读书笔记
+
+不仅限于技术文章，希望能通过对书籍的总结能对这个世界拥有更多独到见解
+
+:::
+
+:::note Others 杂项
+
+可能是优秀文章的外链或者集锦
+
+::: 
+
+
+export const Highlight = () => { 
+  const from = 1619625600000;
+  const today = +new Date();
+  const distance = Math.floor((today - from) / (24 * 60 * 60 * 1000));
+  return (
+    <strong
+      style={{
+        color: '#25c2a0',
+        fontWeight: '700',
+        fontSize: '1.6rem',
+        margin: '0 0.2rem'
+      }}
+      title="start from 2021-4-29"
+    >{distance}</strong> 
+  )
+}

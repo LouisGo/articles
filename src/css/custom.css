@@ -1,0 +1,144 @@
+/* stylelint-disable docusaurus/copyright-header */
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-font-family-monospace: 'Fira Code', SFMono-Regular, Menlo, Monaco,
+    Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --ifm-color-primary: rgb(37, 194, 160);
+  --ifm-color-primary-dark: rgb(33, 175, 144);
+  --ifm-color-primary-darker: rgb(31, 165, 136);
+  --ifm-color-primary-darkest: rgb(26, 136, 112);
+  --ifm-color-primary-dark-to-end: rgb(19, 95, 80);
+  --ifm-color-primary-light: rgb(70, 203, 174);
+  --ifm-color-primary-lighter: rgb(102, 212, 189);
+  --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-code-font-size: 95%;
+  --ifm-code-border-radius: 0.2rem;
+  --ifm-pre-border-radius: 0.4rem;
+  --ifm-code-padding-vertical: 0.05rem;
+  --ifm-code-padding-horizontal: 0.4rem;
+  /* 自定义斑马背景高度 */
+  --custom-theme-zebra-height: 22px;
+  --custom-theme-highlight-code-light: rgba(255, 250, 218, 1);
+  --custom-theme-highlight-code-dark: rgba(143, 123, 12, 0.3);
+}
+
+code {
+  margin: 0.2rem;
+  /* border: 1px solid rgba(37, 194, 160, .15); */
+  border: none;
+  border-left: 2px solid rgba(37, 194, 160, 1);
+  border-right: 2px solid rgba(37, 194, 160, 1);
+  border-radius: 0.4rem;
+  background-color: #f9f9f9;
+  font-weight: bold;
+  position: relative;
+  color: var(--ifm-color-primary);
+}
+
+pre {
+  position: relative;
+  font-size: 15px;
+  border-left: 0.5rem solid var(--ifm-color-primary-darkest);
+  box-shadow: 0 2px 0.5rem 0.1rem rgb(100 100 100 / 10%);
+  background: linear-gradient(#ffffff 50%, rgb(250, 253, 248) 0);
+  background-size: 100% calc(2 * var(--custom-theme-zebra-height));
+  transition: box-shadow 0.3s, border 0.3s;
+}
+
+/* 代码块的滚动条样式 */
+pre::-webkit-scrollbar {
+  height: var(--ifm-scrollbar-size);
+  width: var(--ifm-scrollbar-size);
+}
+pre::-webkit-scrollbar-track {
+  background: var(--ifm-scrollbar-track-background-color);
+  border-radius: 10px;
+}
+pre::-webkit-scrollbar-thumb {
+  background: #cccccc !important;
+  border-radius: 10px;
+}
+pre::-webkit-scrollbar-thumb:hover {
+  background: #aaaaaa !important;
+}
+
+html[data-theme='dark'] pre::-webkit-scrollbar-thumb {
+  background: #666666 !important;
+}
+html[data-theme='dark'] pre::-webkit-scrollbar-thumb:hover {
+  background: #444444 !important;
+}
+html[data-theme='dark'] pre::-webkit-scrollbar-track {
+  background: #282a36;
+}
+
+html[data-theme='dark'] pre {
+  color: rgb(248, 248, 242);
+  background: rgb(40, 42, 54);
+  border-left: 0.5rem solid var(--ifm-color-primary-dark-to-end);
+  box-shadow: none;
+}
+
+html[data-theme='dark'] pre code {
+  background: rgb(40, 42, 54);
+}
+
+/* dark模式下的code背景 */
+html[data-theme='dark'] code {
+  background-color: var(--ifm-code-background);
+}
+
+/* dark模式下带title的代码块 */
+html[data-theme='dark']
+  .codeBlockTitle_node_modules-\@docusaurus-theme-classic-lib-next-theme-CodeBlock-styles-module {
+  border: none !important;
+  border-bottom: 1px solid #444444 !important;
+  background-color: rgb(40, 42, 54) !important;
+}
+
+/* 设置正确的宽度 */
+pre code {
+  min-width: calc(100%) !important;
+}
+
+/* 统一高度方便斑马背景对齐 */
+pre code .token-line {
+  height: var(--custom-theme-zebra-height);
+}
+
+
+/* 代码块跟背景斑马对齐 */
+.codeBlockLines_node_modules-\@docusaurus-theme-classic-lib-next-theme-CodeBlock-styles-module {
+  padding: var(--custom-theme-zebra-height) !important;
+  margin: 0 !important;
+}
+
+/* light模式下的高亮代码行 */
+.docusaurus-highlight-code-line {
+  background-color: var(--custom-theme-highlight-code-light);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding)) 0;
+  padding: 0 var(--ifm-pre-padding);
+}
+
+/* dark模式下的高亮代码行 */
+html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: var(--custom-theme-highlight-code-dark);
+}
+
+/* 带title的代码块 */
+.codeBlockTitle_node_modules-\@docusaurus-theme-classic-lib-next-theme-CodeBlock-styles-module {
+  padding: 0.7rem 0.75rem !important;
+  border: 1px solid var(--ifm-color-emphasis-300) !important;
+  border-bottom: none !important;
+  background-color: rgb(240, 251, 233) !important;
+  /* border-bottom: 1px dashed var(--ifm-color-emphasis-300) !important; */
+  /* border-left: 0.5rem solid var(--ifm-color-primary-darkest) !important; */
+}
+
