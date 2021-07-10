@@ -10,7 +10,7 @@ module.exports = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: '', // Usually your GitHub org/user name.
+  organizationName: 'LouisGo', // Usually your GitHub org/user name.
   projectName: '个人主页', // Usually your repo name.
   themeConfig: {
     navbar: {
@@ -103,15 +103,13 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/',
+          // 改成自己的github地址.
+          editUrl: 'https://github.com/LouisGo/articles/tree/publish/',
         },
         blog: {
           showReadingTime: false,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/master/website/blog/',
+          // 改成自己的github地址.
+          editUrl: 'https://github.com/LouisGo/articles/blob/publish/',
           // 以下内容由@docusaurus/plugin-content-blog解锁配置，官网没有，https://www.wenjiangs.com/doc/y1j0lb9p
           blogTitle: 'LouisGo的博客',
           blogSidebarCount: 'ALL',
