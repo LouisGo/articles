@@ -13,6 +13,9 @@ module.exports = {
   organizationName: 'LouisGo', // Usually your GitHub org/user name.
   projectName: '个人主页', // Usually your repo name.
   themeConfig: {
+    // algolia: {
+    //   contextualSearch: true,
+    // },
     navbar: {
       title: 'LouisGo',
       logo: {
