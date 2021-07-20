@@ -94,6 +94,11 @@ html[data-theme='dark'] code {
   background-color: var(--ifm-code-background);
 }
 
+/* dark模式下的img亮度减低 */
+html[data-theme='dark'] article img {
+  filter: brightness(0.8);
+}
+
 /* dark模式下带title的代码块 */
 html[data-theme='dark']
   .codeBlockTitle_node_modules-\@docusaurus-theme-classic-lib-next-theme-CodeBlock-styles-module {
