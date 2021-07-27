@@ -132,16 +132,17 @@ module.exports = {
     defaultLocale: 'zh-Hans',
     locales: ['zh-Hans'],
   },
-  plugins: [
-    function myPlugin(context, options) {
-      return {
-        name: 'myPlugin',
-        getClientModules() {
-          return [
-            require.resolve('./img-preview.js')
-          ] 
-        }
-      }
-    }
-  ]
+  clientModules: [require.resolve('./img-preview.js')],
+  // plugins: [
+  //   function myPlugin(context, options) {
+  //     return {
+  //       name: 'myPlugin',
+  //       getClientModules() {
+  //         return [
+  //           require.resolve('./img-preview.js')
+  //         ]
+  //       }
+  //     }
+  //   }
+  // ]
 };
