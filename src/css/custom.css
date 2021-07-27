@@ -68,6 +68,10 @@ pre::-webkit-scrollbar-thumb:hover {
   background: #aaaaaa !important;
 }
 
+article img {
+  cursor: pointer;
+}
+
 html[data-theme='dark'] pre::-webkit-scrollbar-thumb {
   background: #666666 !important;
 }
@@ -117,7 +121,6 @@ pre code .token-line {
   height: var(--custom-theme-zebra-height);
 }
 
-
 /* 代码块跟背景斑马对齐 */
 .codeBlockLines_node_modules-\@docusaurus-theme-classic-lib-next-theme-CodeBlock-styles-module {
   padding: var(--custom-theme-zebra-height) !important;
@@ -147,3 +150,22 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   /* border-left: 0.5rem solid var(--ifm-color-primary-darkest) !important; */
 }
 
+.image-preview-modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.image-preview-modal img {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 100%;
+  max-height: 100%;
+  vertical-align: middle;
+}

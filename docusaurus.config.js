@@ -5,7 +5,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 module.exports = {
   title: 'LouisGo 的个人主页',
   tagline: '欢迎来到 LouisGo 的个人主页，希望你能有所收获:)',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'http://louisgo.top',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
@@ -119,7 +119,10 @@ module.exports = {
           blogSidebarTitle: '所有博客',
         },
         theme: {
-          customCss: require.resolve('./src/css/custom.css'),
+          customCss: [
+            require.resolve('./src/css/custom.css'),
+            require.resolve('./src/css/viewer.css'),
+          ],
         },
       },
     ],
@@ -129,4 +132,16 @@ module.exports = {
     defaultLocale: 'zh-Hans',
     locales: ['zh-Hans'],
   },
+  plugins: [
+    function myPlugin(context, options) {
+      return {
+        name: 'myPlugin',
+        getClientModules() {
+          return [
+            require.resolve('./img-preview.js')
+          ] 
+        }
+      }
+    }
+  ]
 };

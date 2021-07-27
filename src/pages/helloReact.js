@@ -14,7 +14,7 @@ function Hello() {
         }}
       >
         <p>
-          Edit <code>pages/hello.jsss</code> and save to reload.
+          Edit <code>pages/hello.js</code> and save to reload.
         </p>
       </div>
     </Layout>
