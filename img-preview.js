@@ -1,18 +1,38 @@
-const Viewer = require('viewerjs')
-let viewer = null;
-console.log('excute!!!!!!!')
+// const Viewer = require('viewerjs')
+// require('viewerjs/dist/viewer.css')
+let $modal = null;
+console.log('excute!!!!!!!');
 if (typeof window !== 'undefined') {
+  // window.Viewer = Viewer;
   window.addEventListener('click', function (e) {
     console.log(e);
-    if (e.target && e.target.tagName === 'IMG' && !viewer) {
+    if (e.target && e.target.tagName === 'IMG' && !$modal) {
       const $img = e.target.cloneNode();
-      // const $modal = document.createElement('div');
-      // $modal.className = 'image-preview-modal';
-      // $modal.appendChild($img)
-  
+      const bodyWidth = document.body.offsetWidth;
+      const bodyHeight = document.body.offsetHeight;
+      const naturalWidth = $img.naturalWidth;
+      const naturalHeight = $img.naturalHeight;
+      let width = naturalWidth;
+      let height = naturalHeight;
+      // $img.style.width = width + 'px';
+      // $img.style.height = height + 'px';
+      if (naturalWidth > bodyWidth) {
+        $img.style.width = width + 'px';
+      } else if (naturalHeight > bodyHeight) {
+        $img.style.height = height + 'px';
+      }
+      if (width < bodyWidth / 2 && height < bodyHeight / 2) {
+        $img.style.width = width * 2 + 'px';
+        $img.style.height = height * 2 + 'px';
+      }
+      $modal = document.createElement('div');
+      $modal.className = 'image-preview-modal';
+      const $wrapper = document.createElement('div');
+      $wrapper.className = 'image-preview-wrapper';
+      $wrapper.appendChild($img)
+      $modal.appendChild($wrapper);
       // View an image.
-      viewer = new Viewer($img, {
-        container: document.querySelector('#__docusaurus'),
+      /* viewer = new Viewer($img, {
         loop: false,
         toolbar: {
           zoomIn: {
@@ -52,15 +72,19 @@ if (typeof window !== 'undefined') {
           next: 0,
         },
       });
-      viewer.show();
-      function onClose() {
-        $img.removeEventListener('hidden', onClose);
-        $img.remove();
-        viewer.destroy();
-        viewer = null;
+      viewer.show(); */
+      function onClose(e) {
+        e.stopPropagation();
+        $modal.classList.add('hiding');
+        setTimeout(() => {
+          $modal && $modal.removeEventListener('click', onClose);
+          $wrapper.remove();
+          document.body.removeChild($modal);
+          $modal = null;
+        }, 350);
       }
-      $img.addEventListener('hidden', onClose);
-      // document.body.appendChild($modal);
+      $modal.addEventListener('click', onClose);
+      document.body.appendChild($modal);
     }
   });
 }

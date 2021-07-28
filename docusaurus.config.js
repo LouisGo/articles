@@ -3,7 +3,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'LouisGo 的个人主页',
+  title: 'LouisGo的个人主页',
   tagline: '欢迎来到 LouisGo 的个人主页，希望你能有所收获:)',
   url: 'http://louisgo.top',
   baseUrl: '/',
@@ -121,7 +121,7 @@ module.exports = {
         theme: {
           customCss: [
             require.resolve('./src/css/custom.css'),
-            require.resolve('./src/css/viewer.css'),
+            // require.resolve('./src/css/viewer.css'),
           ],
         },
       },
