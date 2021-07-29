@@ -7,6 +7,9 @@ if (typeof window !== 'undefined') {
   window.addEventListener('click', function (e) {
     console.log(e);
     if (e.target && e.target.tagName === 'IMG' && !$modal) {
+      if (e.target.alt === 'LouisGo logo') {
+        return;
+      }
       const $img = e.target.cloneNode();
       const bodyWidth = document.body.offsetWidth;
       const bodyHeight = document.body.offsetHeight;

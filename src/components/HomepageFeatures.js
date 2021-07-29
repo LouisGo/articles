@@ -1,48 +1,55 @@
 import React from 'react';
-import clsx from 'clsx';
+import cls from 'clsx';
 import styles from './HomepageFeatures.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
+    title: '睡什么睡',
+    src: require('../../static/img/index1.gif').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        <strong>当你在沉睡的时候，美国人却正在努力工作学习</strong>
+        ，你这个年纪怎么睡得着觉？赶紧起来学习！
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
+    title: '你把握不住',
+    src: require('../../static/img/index2.gif').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        铁子，听哥一句劝，这个物欲横流的世界你把握不住，乱花渐欲迷人眼，
+        <strong>唯有如一棵入定老松般扎根学习才是王道！</strong>
       </>
     ),
+    center: true,
   },
   {
-    title: 'Powered by React',
-    Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
+    title: '快乐就完事了',
+    src: require('../../static/img/index3.gif').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        <strong>快乐学习、快乐工作的同时没有那么多嘻嘻哈哈</strong>
+        ，争取为祖国健康发电 100 年！
       </>
     ),
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({ src, title, description, center }) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} alt={title} />
+    <div className={cls('col col--4')}>
+      <div
+        className={cls(
+          'text--center',
+          styles.feature,
+          center ? styles.featureCenter : ''
+        )}
+      >
+        <img alt={title} src={src} />
       </div>
-      <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
+      <div className={cls('text--center padding-horiz--md', styles.featureContent)}>
+        <h3>「 {title} 」</h3>
         <p>{description}</p>
       </div>
     </div>

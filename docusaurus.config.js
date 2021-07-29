@@ -3,7 +3,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'LouisGo的个人主页',
+  title: 'LouisGoTop',
   tagline: '欢迎来到 LouisGo 的个人主页，希望你能有所收获:)',
   url: 'http://louisgo.top',
   baseUrl: '/',
@@ -90,7 +90,7 @@ module.exports = {
       //     ],
       //   },
       // ],
-      copyright: `LouisGo 的个人主页 打开微信扫描 ↑ 二维码即可进行打赏哦 ❤ Built with Docusaurus ❤`,
+      copyright: `粤ICP 2021103980 打开微信扫描 ↑ 二维码即可进行打赏哦 <br /> ❤ Built with Docusaurus ❤`,
     },
     prism: {
       theme: lightCodeTheme,
@@ -133,6 +133,26 @@ module.exports = {
     locales: ['zh-Hans'],
   },
   clientModules: [require.resolve('./img-preview.js')],
+  plugins: [
+    // ... Your other plugins.
+    [
+      require.resolve('@easyops-cn/docusaurus-search-local'),
+      {
+        hashed: true,
+        language: ['en', 'zh'],
+        translations: {
+          search_placeholder: '搜索',
+          see_all_results: '查看所有结果',
+          no_results: '没有查询到相关结果',
+          search_results_for: '"{{ keyword }}"的搜索结果',
+          search_the_documentation: '搜索创作',
+          count_documents_found: '找到 {{ count }} 个匹配项',
+          count_documents_found_plural: '找到{{ count }} 个匹配项',
+          no_documents_were_found: '没有查询到相关创作',
+        },
+      },
+    ],
+  ],
   // plugins: [
   //   function myPlugin(context, options) {
   //     return {

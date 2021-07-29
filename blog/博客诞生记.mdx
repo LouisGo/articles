@@ -1,0 +1,66 @@
+---
+title: 博客诞生记
+date: 2021-07-29
+author: LouisGo
+author_title: 一介前端
+author_image_url: https://i.loli.net/2021/07/10/sfmijBHXGraYDTA.jpg
+keywords: [Blog, 博客, 从零开始, 博客教程]
+tags: [前端, 最佳实践]
+# draft: true
+---
+
+# :)
+
+是的，历经一些小困难，这次我自己搭了个博客。
+
+7 月 9 号，首先花了 59 块上万网淘了个还算有寓意的域名—— [louisgo.top](http://louisgo.top)（直译就是 👴 要往 🔼 爬）。
+
+本来想就近选个阿里云服务器的，结果试了老半天硬是不给我这个新人新人优惠，选来选去最垃圾的配置都要 1k+，果断放弃。
+
+转投腾讯云，花 99 块钱薅了一个完全够用的低保服务器：
+
+![image.png](https://i.loli.net/2021/07/29/fnNweErxWZOBVUq.png)
+
+回头想想，周末去喝两杯手冲 ☕️ 都要快 100，这钱花的挺值。
+
+7 月 11 日开始了万恶的备案环节，各种打回各种补资料各种折腾，**甚至还有拍照验证时没注意裸着上身被客服小姐姐“调戏”的喜闻乐见的环节**。好在历经千辛万苦还是把备案资料玩明白了。
+
+前后等了接近 2 周 在 7 月 26 日那天通过了管局审核，终于首次 ping 通了 lousigo.top 的域名。
+
+期间进行了各种折腾，包括但不限于：
+
+- 代码高亮样式调整，虽然 [docusaurus](https://docusaurus.io/zh-CN/) 的代码分词不够全，但我确实尽力调到了 [Slack Theme](https://marketplace.visualstudio.com/items?itemName=felipe-mendes.slack-theme) 70% 的效果
+- 结合暗黑模式下的各种细节样式调整
+- 被迫手写了一个简单的图片预览插件，[viewerjs](https://github.com/fengyuanchen/viewerjs) 一上到生产环境就蹿稀，不知道发生肾么事了
+- 踩 docusaurus 的各种坑
+- 搬运和丰富文章
+
+虽然我之前也间歇性的维护过一个基于 hexo + github pages 的博客网站，最终也是荒废了。
+
+但这次与之前很不一样的是这次属于“带资入组”，在还未打算维护一个博客之前，我已经在 notion 上成功打卡超过了一个月:
+
+![image.png](https://i.loli.net/2021/07/29/CVliBIk3vA6zUZG.png)
+
+有人说过养成一个习惯的时间是 33 天，但此时此刻我已经坚持了 <Highlight/> 天。
+
+本站包括但不限于技术文章，也会有其它的骚东西，未来也会逐步发掘更多新玩法。
+
+**希望自己能够笔耕不辍，多写点阳间的东西**。
+
+
+export const Highlight = () => { 
+  const from = 1619625600000;
+  const today = +new Date();
+  const distance = Math.floor((today - from) / (24 * 60 * 60 * 1000));
+  return (
+    <strong
+      style={{
+        color: '#25c2a0',
+        fontWeight: '700',
+        fontSize: '1.6rem',
+        margin: '0 0.2rem'
+      }}
+      title="start from 2021-4-29"
+    >{distance}</strong> 
+  )
+}

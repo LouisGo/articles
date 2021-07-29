@@ -7,7 +7,23 @@
   width: 100%;
 }
 
-.featureSvg {
-  height: 200px;
-  width: 200px;
+.feature {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 205px;
+  margin-bottom: 20px;
+}
+
+.feature img {
+  height: 205px;
+}
+
+.featureCenter img {
+  height: 170px;
+  margin-top: 20px;
+}
+
+.featureContent h3 {
+  font-size: 25px;
 }
