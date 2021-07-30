@@ -44,81 +44,81 @@ code {
 pre {
   position: relative;
   font-size: 15px;
+  border: 1px solid var(--ifm-color-emphasis-300);
   border-left: 0.5rem solid var(--ifm-color-primary-darkest);
   box-shadow: 0 2px 0.5rem 0.1rem rgb(100 100 100 / 10%);
   background: linear-gradient(#ffffff 50%, rgb(250, 253, 248) 0);
   background-size: 100% calc(2 * var(--custom-theme-zebra-height));
+  border-radius: 0 0 0.46rem 0.46rem !important;
   transition: box-shadow 0.3s, border 0.3s;
-}
+  /* 代码块的滚动条样式 */
+  &::-webkit-scrollbar {
+    height: var(--ifm-scrollbar-size);
+    width: var(--ifm-scrollbar-size);
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--ifm-scrollbar-track-background-color);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #cccccc !important;
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: #aaaaaa !important;
+  }
 
-/* 代码块的滚动条样式 */
-pre::-webkit-scrollbar {
-  height: var(--ifm-scrollbar-size);
-  width: var(--ifm-scrollbar-size);
-}
-pre::-webkit-scrollbar-track {
-  background: var(--ifm-scrollbar-track-background-color);
-  border-radius: 10px;
-}
-pre::-webkit-scrollbar-thumb {
-  background: #cccccc !important;
-  border-radius: 10px;
-}
-pre::-webkit-scrollbar-thumb:hover {
-  background: #aaaaaa !important;
+  /* 设置正确的宽度 */
+  code {
+    min-width: calc(100%) !important;
+    .token-line {
+      height: var(--custom-theme-zebra-height);
+    }
+  }
 }
 
 article img {
   cursor: pointer;
 }
 
-html[data-theme='dark'] pre::-webkit-scrollbar-thumb {
-  background: #666666 !important;
-}
-html[data-theme='dark'] pre::-webkit-scrollbar-thumb:hover {
-  background: #444444 !important;
-}
-html[data-theme='dark'] pre::-webkit-scrollbar-track {
-  background: #282a36;
-}
-
-html[data-theme='dark'] pre {
-  color: rgb(248, 248, 242);
-  background: rgb(40, 42, 54);
-  border-left: 0.5rem solid var(--ifm-color-primary-dark-to-end);
-  box-shadow: none;
-}
-
-html[data-theme='dark'] pre code {
-  background: rgb(40, 42, 54);
-}
-
-/* dark模式下的code背景 */
-html[data-theme='dark'] code {
-  background-color: var(--ifm-code-background);
-}
-
-/* dark模式下的img亮度减低 */
-html[data-theme='dark'] article img {
-  filter: brightness(0.8);
-}
-
-/* dark模式下带title的代码块 */
-html[data-theme='dark']
+html[data-theme='dark'] {
+  pre {
+    color: rgb(248, 248, 242);
+    background: rgb(40, 42, 54);
+    border: none;
+    border-left: 0.5rem solid var(--ifm-color-primary-dark-to-end);
+    box-shadow: none;
+    &::-webkit-scrollbar-thumb {
+      background: #666666 !important;
+    }
+    &::-webkit-scrollbar-thumb:hover {
+      background: #444444 !important;
+    }
+    &::-webkit-scrollbar-track {
+      background: #282a36;
+    }
+    code {
+      background: rgb(40, 42, 54);
+    }
+  }
+  /* dark模式下的code背景 */
+  code {
+    background-color: var(--ifm-code-background);
+  }
+  /* dark模式下的img亮度减低 */
+  article img {
+    filter: brightness(0.8);
+  }
+  /* dark模式下带title的代码块 */
   .codeBlockTitle_node_modules-\@docusaurus-theme-classic-lib-next-theme-CodeBlock-styles-module {
-  border: none !important;
-  border-bottom: 1px solid #444444 !important;
-  background-color: rgb(40, 42, 54) !important;
-}
-
-/* 设置正确的宽度 */
-pre code {
-  min-width: calc(100%) !important;
-}
-
-/* 统一高度方便斑马背景对齐 */
-pre code .token-line {
-  height: var(--custom-theme-zebra-height);
+    border: none !important;
+    border-bottom: 1px solid #444444 !important;
+    background-color: rgb(40, 42, 54) !important;
+  }
+  /* dark模式下的高亮代码行 */
+  .docusaurus-highlight-code-line {
+    background-color: var(--custom-theme-highlight-code-dark);
+  }
 }
 
 /* 代码块跟背景斑马对齐 */
@@ -135,17 +135,13 @@ pre code .token-line {
   padding: 0 var(--ifm-pre-padding);
 }
 
-/* dark模式下的高亮代码行 */
-html[data-theme='dark'] .docusaurus-highlight-code-line {
-  background-color: var(--custom-theme-highlight-code-dark);
-}
-
 /* 带title的代码块 */
 .codeBlockTitle_node_modules-\@docusaurus-theme-classic-lib-next-theme-CodeBlock-styles-module {
   padding: 0.7rem 0.75rem !important;
   border: 1px solid var(--ifm-color-emphasis-300) !important;
   border-bottom: none !important;
   background-color: rgb(240, 251, 233) !important;
+  border-radius: 0.46rem 0.46rem 0 0;
   /* border-bottom: 1px dashed var(--ifm-color-emphasis-300) !important; */
   /* border-left: 0.5rem solid var(--ifm-color-primary-darkest) !important; */
 }
@@ -165,7 +161,7 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   animation: showOut 0.35s ease forwards;
 }
 
-.image-preview-modal.hiding .image-preview-wrapper  {
+.image-preview-modal.hiding .image-preview-wrapper {
   opacity: 1;
   transform: scale(1);
   animation: scaleOut 0.25s cubic-bezier(0.18, 0.4, 0.47, 1.27) forwards;

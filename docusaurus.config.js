@@ -120,7 +120,7 @@ module.exports = {
         },
         theme: {
           customCss: [
-            require.resolve('./src/css/custom.css'),
+            require.resolve('./src/css/custom.scss'),
             // require.resolve('./src/css/viewer.css'),
           ],
         },
@@ -152,6 +152,7 @@ module.exports = {
         },
       },
     ],
+    'docusaurus-plugin-sass',
   ],
   // plugins: [
   //   function myPlugin(context, options) {

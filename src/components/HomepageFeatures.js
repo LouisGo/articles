@@ -5,7 +5,7 @@ import styles from './HomepageFeatures.module.css';
 const FeatureList = [
   {
     title: '睡什么睡',
-    src: require('../../static/img/index1.gif').default,
+    src: 'https://i.loli.net/2021/07/30/tnOzoMpD7JwbZmr.gif',
     description: (
       <>
         <strong>当你在沉睡的时候，美国人却正在努力工作学习</strong>
@@ -15,7 +15,7 @@ const FeatureList = [
   },
   {
     title: '你把握不住',
-    src: require('../../static/img/index2.gif').default,
+    src: 'https://i.loli.net/2021/07/30/RCxhSzAPciNJU7q.gif',
     description: (
       <>
         铁子，听哥一句劝，这个物欲横流的世界你把握不住，乱花渐欲迷人眼，
@@ -26,7 +26,7 @@ const FeatureList = [
   },
   {
     title: '快乐就完事了',
-    src: require('../../static/img/index3.gif').default,
+    src: 'https://i.loli.net/2021/07/30/XHq7KxnbLdGCTVY.gif',
     description: (
       <>
         <strong>快乐学习、快乐工作的同时没有那么多嘻嘻哈哈</strong>
