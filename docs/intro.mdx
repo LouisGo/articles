@@ -10,13 +10,16 @@ sidebar_position: 1
 
 今天是我坚持的第 <Highlight/> 天，共勉~
 
-
-<p style={{textAlign: 'center', padding: '30px 0'}}>
-  <img alt="微米" src="https://i.loli.net/2021/07/11/PVR5GhjXu9OIKYC.jpg" style={{ width: '20rem'}}/>
+<p style={{ textAlign: 'center', padding: '30px 0' }}>
+  <img
+    alt="微米"
+    src="https://i.loli.net/2021/07/11/PVR5GhjXu9OIKYC.jpg"
+    style={{ width: '20rem' }}
+  />
   <p style={{ fontWeight: 'bold' }}>微米镇站</p>
 </p>
 
-___
+---
 
 本站的文章类型主要分为以下两类：
 
@@ -32,6 +35,18 @@ ___
 
 以下打开左侧侧边栏可以选择类别进行阅读：
 
+:::note 21 年度变强路径
+
+[打工人打怪升级路径速查](/docs/21年度变强路径)，同时 mark 自己的学习进度
+
+:::
+
+:::note Collection 集锦
+
+[根据 roadmap 生成的优秀学习资源集锦](/docs/collections)
+
+:::
+
 :::note Daily 开发日记
 
 并非真的日记，~~每日更新是不可能滴~~，而是记录开发过程中真实遇到的刁钻问题、有必要记录的坑或者其它收获和吐槽
@@ -44,14 +59,7 @@ ___
 
 :::
 
-:::note Others 杂项
-
-可能是优秀文章的外链或者集锦
-
-::: 
-
-
-export const Highlight = () => { 
+export const Highlight = () => {
   const from = 1619625600000;
   const today = +new Date();
   const distance = Math.floor((today - from) / (24 * 60 * 60 * 1000));
@@ -61,9 +69,11 @@ export const Highlight = () => {
         color: '#25c2a0',
         fontWeight: '700',
         fontSize: '1.6rem',
-        margin: '0 0.2rem'
+        margin: '0 0.2rem',
       }}
       title="start from 2021-4-29"
-    >{distance}</strong> 
-  )
-}
+    >
+      {distance}
+    </strong>
+  );
+};

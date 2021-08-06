@@ -172,17 +172,21 @@ html[data-theme='dark'] {
   height: 100%;
   transform: scale(0);
   opacity: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
   animation: scaleIn 0.25s cubic-bezier(0.18, 0.4, 0.47, 1.27) 0.15s forwards;
 }
 
 .image-preview-modal img {
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  max-width: 100%;
+  left: 0;
+  top: 0;
+  // left: 50%;
+  // top: 50%;
+  // transform: translate(-50%, -50%);
+  max-width: unset !important;
   /* max-height: 100%; */
-  vertical-align: middle;
+  // vertical-align: middle;
 }
 
 html[data-theme='dark'] .image-preview-modal img {
