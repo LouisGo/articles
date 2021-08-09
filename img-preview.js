@@ -1,3 +1,6 @@
+/**
+ * 简易图片查看器
+ */
 class ImageViewer {
   $target = null;
   $modal = null;
@@ -5,6 +8,8 @@ class ImageViewer {
   $modalImg = null;
   bodyWidth = 1920;
   bodyHeight = 1080;
+  scrollTop = 0;
+  scrollbarWidth = 16;
   constructor() {
     this.globalClickHandler = this.globalClickHandler.bind(this);
     this.globalResizeHandler = this.globalResizeHandler.bind(this);
@@ -13,9 +18,18 @@ class ImageViewer {
     this.init();
   }
   init() {
-    this.bodyWidth = document.body.offsetWidth;
-    this.bodyHeight = document.body.offsetHeight;
-    this.initEvents();
+    window.addEventListener(
+      'load',
+      () => {
+        this.bodyWidth = document.body.offsetWidth;
+        this.bodyHeight = document.body.offsetHeight;
+        this.initEvents();
+        this.scrollbarWidth = getScrollbarWidth();
+      },
+      {
+        once: true,
+      }
+    );
   }
   initEvents() {
     window.addEventListener('click', this.globalClickHandler);
@@ -46,6 +60,7 @@ class ImageViewer {
   }
   show() {
     if (!this.$target) return;
+    this.handleScrollContainer(true);
     this.createModal();
   }
   createModal() {
@@ -58,6 +73,20 @@ class ImageViewer {
     this.$modal.appendChild(this.$wrapper);
     this.$modal.addEventListener('click', this.modalClickHandler);
     document.body.appendChild(this.$modal);
+  }
+  handleScrollContainer(state = true) {
+    if (state) {
+      const scrollTop = document.body.getBoundingClientRect().y;
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = `${this.scrollbarWidth}px`;
+      this.scrollTop = scrollTop;
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
+      document.body.scrollTo({
+        y: this.scrollTop,
+      });
+    }
   }
   createWrapper() {
     const $wrapper = document.createElement('div');
@@ -94,6 +123,7 @@ class ImageViewer {
   }
   hide() {
     if (!this.$modal) return;
+    this.handleScrollContainer(false);
     this.$modal.removeEventListener('click', this.modalClickHandler);
     this.$wrapper.remove();
     document.body.removeChild(this.$modal);
@@ -103,7 +133,38 @@ class ImageViewer {
   }
 }
 if (typeof window !== 'undefined') {
-  console.log('excute!!!!!!!');
   const viewer = new ImageViewer();
   window._ImageViewer = viewer;
 }
+
+/**
+ * 获取当前浏览器滚动条宽度
+ */
+function getScrollbarWidth () {
+  // 创建不可见的虚拟容器
+  const container = document.createElement('div');
+  container.style.visibility = 'hidden';
+  container.style.position = 'absolute';
+  container.style.left = '-9999px';
+  container.style.width = '100px';
+  container.style.overflow = 'scroll'; // 强制展示滚动条
+
+  document.body.append(container);
+
+  // 获取外容器宽度
+  const containerWidth = container.offsetWidth;
+
+  // 创建内部容器
+  const inner = document.createElement('div');
+  inner.style.width = '100%';
+  container.appendChild(inner);
+
+  // 获取内部容器宽度
+  const innerWidth = inner.offsetWidth;
+
+  // 移除节点
+  container.parentNode && container.parentNode.removeChild(container);
+
+  // 获取实际滚动条宽度
+  return containerWidth - innerWidth;
+};
