@@ -78,7 +78,7 @@ pre {
 }
 
 article img {
-  cursor: pointer;
+  cursor: zoom-in;
 }
 
 html[data-theme='dark'] {
@@ -153,6 +153,7 @@ html[data-theme='dark'] {
   bottom: 0;
   left: 0;
   z-index: 1000;
+  cursor: zoom-out;
   background: rgba(0, 0, 0, 0.85);
   animation: showIn 0.35s ease forwards;
 }
