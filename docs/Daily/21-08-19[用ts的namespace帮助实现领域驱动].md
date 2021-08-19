@@ -6,7 +6,7 @@ slug: 21-08-19
 
 ## 背景
 
-以男女话题为例（不是你想的那种），前端写接口请求时常见的做法是把涉及的所有请求方法堆在 `api/request` 文件里，做的好一点可能会以文件模块的形式分散在 `api/request/male` 和 `api/request/female` 目录下，然后在需要请求的业务文件里 `import { treeNewBee } from 'api/request/male'` 引入方法进行请求。
+以两性话题为例（不是你想的那种），前端写接口请求时常见的做法是把涉及的所有请求方法堆在 `api/request` 文件里，做的好一点可能会以文件模块的形式分散在 `api/request/male` 和 `api/request/female` 目录下，然后在需要请求的业务文件里 `import { treeNewBee } from 'api/request/male'` 引入方法进行请求。
 
 在简单的业务场景下这种做法没有问题，很优秀，但是一旦请求方法多了或者给方法附加的定语多了之后就会变得很难维护：
 
