@@ -20,14 +20,25 @@ draft: true
 ### 网络通信原理
 
 ## HTML
+- [MDN中文文档](https://developer.mozilla.org/zh-CN/docs/Web/HTML)
 
 ## CSS
+- [MDN中文文档](https://developer.mozilla.org/zh-CN/docs/Web/CSS)
+- [张鑫旭大神的网站](https://www.zhangxinxu.com/)
 
 ## JavaScript
-
+- [MDN中文文档](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript)
 ## Node.js
+- [推荐 9 个 Node.js 学习、进阶、debugging 分析、实战 的重磅开源项目](https://juejin.cn/post/6961101653709684772)
+- [一篇文章构建你的 NodeJS 知识体系](https://juejin.cn/post/6844903767926636558)
+- [Node初学者入门，一本全面的NodeJS教程](http://ourjs.com/detail/529ca5950cb6498814000005)
 
 ## 版本控制系统
+
+- [git官网](https://git-scm.com/)
+- [git趣味学习游戏，通关就是大神](https://learngitbranching.js.org/?locale=zh_CN)
+- [git国内镜像地址](https://gitclone.com)
+- [git仓库删除大文件实践](https://www.cnblogs.com/zooqkl/p/10417186.html)
 
 ## 网络安全相关
 
