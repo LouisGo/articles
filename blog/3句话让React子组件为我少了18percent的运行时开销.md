@@ -55,7 +55,6 @@ function Parent() {
 const Child = React.memo(({ count }: { count: number }) => {
   const [number, setNumber] = useState(0);
 
-  // 或者是useEffect
   useMemo(() => {
     setNumber(count);
   }, [count]);
@@ -87,7 +86,7 @@ export default Parent;
 大概整理如下思路：
 
 1. 父 -> 子的一次更新过程中直接 cover 子 -> 子更新的情况，也就是跳过子组件本身的副作用更新
-2. 模仿 getDerivedStateFromProps 实现 props 的派生
+2. 模仿 getDerivedStateFromProps 实现 props 的派生（不建议在 hooks 写法中模拟生命周期实现）
 3. 状态提升，在数据容器里完成两次状态合并最终派发一次渲染请求，如借助响应式数据更新方法
 
 ## 优化实践
@@ -115,8 +114,8 @@ function Parent() {
   );
 }
 
-const Child = React.memo(({ count }: { count: number }) => {
-  const [number, setNumber] = useState(0);
+const Child = ({ count }: { count: number }) => {
+  const [number, setNumber] = useState(count);
 
   console.log('子组件 render');
   return (
@@ -161,7 +160,6 @@ const Child = React.memo(({ count }: { count: number }) => {
     update({});
   };
 
-  // 或者是useEffect
   useMemo(() => {
     numberRef.current = count;
   }, [count]);
@@ -251,6 +249,10 @@ export default Parent;
 当然这里也可以手写一个 `useReactive` 完成功能，但是没必要 →_→，周五回家饮茶先啦柒头~。
 
 **最后，欢迎点击左下角的【编辑此页】进入 gayhub 一起探讨其它的骚操作或者进行想法碰撞**，有什么想法 issues 区见。
+
+## 最后
+
+其实上述几个方法总结下来个人也没有满意的答案，可能在这里 react 的设计哲学就是让你不必在此种太“龟毛”的问题浪费太多时间吧~有什么难题尽管交给 diff 算法吧，冒烟了也没事儿，计算机就是干这个的。当吗，开阔开阔思路也是极好的~
 
 ## 参考链接
 
