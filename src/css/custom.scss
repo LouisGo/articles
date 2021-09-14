@@ -190,6 +190,17 @@ html[data-theme='dark'] {
   // vertical-align: middle;
 }
 
+.global-footer {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  img {
+    margin-right: 4px;
+  }
+}
+
 html[data-theme='dark'] .image-preview-modal img {
   filter: brightness(0.8);
 }

@@ -90,7 +90,7 @@ module.exports = {
       //     ],
       //   },
       // ],
-      copyright: `粤ICP 2021103980 打开微信扫描 ↑ 二维码即可进行打赏哦 <br /> ❤ Built with Docusaurus ❤`,
+      copyright: `打开微信扫描 ↑ 二维码即可进行打赏哦 <div class="global-footer"><img style="width: 16px" src="https://i.loli.net/2021/09/14/wRkgPnjsY6WM2Uo.png" alt="Police Badge"/><a style="color: #fff" href="https://beian.miit.gov.cn/" target="_blank">粤ICP备2021103980号</a> &nbsp;&nbsp; ❤ Built with Docusaurus ❤</div>`,
     },
     prism: {
       theme: lightCodeTheme,
