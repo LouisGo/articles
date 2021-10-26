@@ -6,47 +6,47 @@
 
 项目地址：https://git.mycaigou.com/ycg/offline-expert-review-tool
 
-线上地址：https://summit-expert-review.[env].com?directoryId=[id]
+线上地址：https://summit-expert-review.b2btst.com?directoryId=64
 
 主要技术选型：
 
-- 前端框架：[react v17+](https://reactjs.org/)，完全 hooks 写法
+- 前端框架：[React v17+](https://reactjs.org/) hooks 写法
 - 前端路由：[react-router v5+](https://reactrouter.com/web/guides/quick-start)
-- 开发和构建工具：[vite v2.6.10](https://cn.vitejs.dev/)，香气四溢
-- 强类型约束：[typescript](https://www.typescriptlang.org/)，不解释
-- css 框架：[tailwindcss](https://www.tailwindcss.cn/)，两级反转
-- 数据管理：[react-query](https://react-query.tanstack.com/)，你可能真的不需要 redux
-- 移动 UI 框架：[Zarm 众安](https://zarm.design/#/docs/introduce)，简约且简单
+- 开发和构建工具：[Vite v2.6.10](https://cn.vitejs.dev/)
+- 强类型约束：[TypeScript](https://www.typescriptlang.org/)
+- css 框架：[TailwindCss](https://www.tailwindcss.cn/)
+- 数据管理：[react-query](https://react-query.tanstack.com/)
+- 移动 UI 框架：[Zarm 众安](https://zarm.design/#/docs/introduce)
 - 高性能表单：[React Hook Form](https://www.react-hook-form.com/)
 
-## vite
+## Vite
 
 首先应该是大多数人比较关心的 vite，先抛出结论：香。无论是 vue 还是 react 的新项目，建议无脑入，理由如下：
 
-1. 市场反馈热烈，已经有 n 多最佳实践珠玉在前，在[Awesome Vite.js](https://github.com/vitejs/awesome-vite#templates)里你基本能找到你想要的一切快速启动模版，本文正是基于[vite-react-tailwind-template](https://github.com/Innei/vite-react-tailwind-template)
-2. 现有版本已经来到 v2.6+，大多数实质影响开发和生产的 bug 已经排的差不多了
+1. 市场反馈热烈，已经有 n 多最佳实践珠玉在前，在 [Awesome Vite.js](https://github.com/vitejs/awesome-vite#templates) 里你基本能找到你想要的一切快速启动模版，这个项目正是基于 [vite-react-tailwind-template](https://github.com/Innei/vite-react-tailwind-template) 开发
+2. 现有版本已经来到 v2.6+，绝大多数实质影响开发和生产的 bug 已经排的差不多了
 3. 尤大值得信赖
 4. 最重要的一点：开发体验真的太太太好了，可以类比从刀耕火种的 jQuery 时代过渡到 react/vue 吞噬一切的时代，未来哪怕不属于 vite，也肯定会遵从 vite 的现有模式发展将 webpack 拍死在沙滩上
 
-**值得注意的是：使用 SSR 渲染的项目可能仍需要进一步观察，因为 vite 官方的支持正处于试验阶段，属于实验性功能**。当然整套方案的输出还是有完整闭环的，[Awesome Vite.js](https://github.com/vitejs/awesome-vite#templates)也有相关的运行模版，未来可期
+**值得注意的是：使用 SSR 渲染的项目可能仍需要进一步观察，因为 vite 官方的 SSR 支持正处于试验阶段，属于实验性功能**。当然整套方案的输出还是有完整闭环的，[Awesome Vite.js](https://github.com/vitejs/awesome-vite#templates) 也有相关的运行模版，未来可期
 
-下面开始介绍几个大家关心的核心问题：
+以下是几个大家可能关心的问题：
 
-### react 支持
+### react 支持度
 
-vite 其实与前端 UI 框架无关，就像 webpack 不会限制你使用 react、vue 还是 angular。
+vite 其实与前端 UI 框架无关，就像 webpack 不会限制你使用 react、vue 还是 angular
 
-官方基于[@vitejs/plugin-react](https://github.com/vitejs/vite/tree/main/packages/plugin-react)提供了完整的 react 支持，提供了以下几个主要的能力：
+官方基于 [@vitejs/plugin-react](https://github.com/vitejs/vite/tree/main/packages/plugin-react) 提供了完整的 react 支持，具备以下几个主要的能力：
 
-- 基于[react-refresh](https://www.npmjs.com/package/react-refresh)实现开发环境的快速刷新（可配置 refresh 范围）
-- 使用 [automatic jsx](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html)运行时，react 官方钦定的未来 jsx transform，使得：
+- 基于 [react-refresh](https://www.npmjs.com/package/react-refresh)实现开发环境的快速刷新（可配置 refresh 范围，搭配原生 ESM，使得开发体验及其丝滑
+- 使用 [automatic jsx](https://reactjs.org/blog/2020/09/22/introducing-the-new-jsx-transform.html) 运行时，react 官方钦定的未来 jsx transform，使得：
   1. 在.jsx 和.tsx 中可以不用再手动`import React from 'react'`
   2. 更好的性能表现
   3. 未来不再需要`React.forwardRef`
   4. 更小的打包尺寸
   5. 自动替换旧的`React.createElement`方法，获取更快的浏览器解析速度
 - 通过 vite 的`resolve.dedupe`配置（默认不用配），对项目内引入的 react 和 react-dom 依赖去重
-- 使用自定义的 babel 插件和预设
+- 使用自定义的 babel 插件和预设，具备很大的自由度
 - 中间件模式的支持
 
 使用方式很简单：
@@ -78,9 +78,9 @@ export default defineConfig({
 
 vite 默认的生产构建环境假设你的目标浏览器支持现代 js 语法，所以 vite 只做语法转译，默认不包含任何 polyfill。
 
-但是可以通过官方提供的[@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy)插件获得传统浏览器的支持。
+但是可以通过官方提供的 [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) 插件获得传统浏览器的支持。
 
-使用非常简单：
+使用同样非常简单：
 
 ```typescript
 // vite.config.ts
@@ -110,7 +110,7 @@ export default defineConfig({
 
 ### 环境变量
 
-传统 webpack 项目我们可以通过 NODE_ENV 传递环境变量，然后在`process.env.NODE_ENV`中取。
+传统 webpack 项目我们可以通过`NODE_ENV`传递环境变量，然后在`process.env.NODE_ENV`中取。
 
 在 vite 中则是暴露在一个特殊的`import.meta.env`全局对象中，其中有一些内置的变量：
 
@@ -138,7 +138,7 @@ VITE_DEBUG_TOKEN=666666
 
 同时可以结合*模式*的概念在开发和生产环境完成更多灵活功能，举个例子：
 
-我们的系统通常会有`dev`、`beta`、`prod`三个环境变量，可能用来处理请求 url，那么
+我们的系统通常会有`dev`、`beta`、`prod`三个环境变量，可以用来处理请求 url，那么
 
 ```json
 // package.json
@@ -148,7 +148,7 @@ VITE_DEBUG_TOKEN=666666
     "dev": "vite --mode dev", // 开发环境使用dev环境请求
     "dev:beta": "vite --mode beta", // 开发环境使用beta环境请求
     "dev:prod": "vite --mode prod", // 开发环境使用prod环境请求
-    "build": "tsc && vite build" // 生产环境
+    "build": "tsc && vite build" // 生产环境，默认读取.env
   }
 }
 ```
@@ -183,13 +183,13 @@ if (isProduction) {
 
 ### 构建优化
 
-有个误区是有人觉得 vite 只是用来提高开发效率的工具，无法完成生产环境的构建。但实际上依托 Rollup 社区，vite 已经完全可以开发构建一把抓，并且提供了健壮灵活的构建配置。
+有个误区是很多人觉得 vite 只是用来提高开发效率的工具，无法取代 webpack 完成生产环境的构建。但实际上依托 Rollup 社区，vite 已经完全可以开发构建一把抓，并且提供了健壮灵活的构建配置。
 
 下面是我进行的一些构建优化：
 
 #### 分包
 
-当执行`yarn build`指令时我看到控制台有一行友情提示：
+当执行`yarn build`指令时有时会看到控制台有一行友情提示：
 
 ![image.png](https://i.loli.net/2021/10/26/tpJ1PEmfoluLqGr.png)
 
@@ -197,9 +197,7 @@ if (isProduction) {
 
 ```typescript
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import legacy from '@vitejs/plugin-legacy';
-import path from 'path';
+// ...
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -240,7 +238,7 @@ export default defineConfig({
 
 #### Zarm 样式按需加载
 
-Zarm 默认支持基于 ES module 的 tree shaking，但是如果完整引入`zarm/dist/zarm.css`样式包，依然会带来额外的 100+kb 的大小，在移动端是个很大的负担
+Zarm 默认支持基于 ES module 的 tree shaking，但是样式包`zarm/dist/zarm.css`引入默认是全量的，会带来额外 100+kb 的大小，在移动端是个不小的负担。为了开启
 
 env 处理 dev beta prod
 
@@ -250,7 +248,7 @@ vite build:
 
 分包 异步 chunk 优化
 
-zarm 按需加载
+zarm 按需加载 vite-plugin-style-import
 
 # 全局状态管理思考：
 
