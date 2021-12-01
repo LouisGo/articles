@@ -132,7 +132,7 @@ React 在其内部维护了一种数据结构，追踪一个应用中存在的�
 - 父组件、兄弟组件和子组件的指针
 - 其他用于追踪渲染进程的内部元数据
 
-[完整 Fiber 定义](https://github.com/facebook/react/blob/v17.0.0/packages/react-reconciler/src/ReactFiber.new.js#L47-L174)
+[React 17 的完整 Fiber 定义](https://github.com/facebook/react/blob/v17.0.0/packages/react-reconciler/src/ReactFiber.new.js#L47-L174)
 
 在整个渲染过程中，React 将会遍历这颗 fiber 树，并且在产生新的渲染结果时构造一颗新的树
 
@@ -142,7 +142,47 @@ fiber 对象中存放的是真实的组件 props 和 state，当你在组件中�
 
 从这个意义上来说，**组件其实是 React fiber 对象的一种外化形式**
 
-### Component Types and Reconciliation  组件类型和协调
+相同的，React hooks 的基本工作原理是 React 以链表的形式存储了一个组件用到的所有 hooks，同时该链表结构也隶属于这个组件的 fiber 对象。当 React 渲染一个函数组件时，它会从 fiber 对象中拿到对应的有着 hooks 描述信息的链表，每次当你调用另外的 hook 函数时，它会返回存储在 hook 描述对象中的相应的值（如 useReducer 中的 state 和 dispatch 值）
+
+当父组件首次渲染给定的子组件时，React 会创建一个 fiber 对象用来追踪组件的“实例”：
+
+- 对于 class 组件，调用`const instance = new YourComponentType(props)`，之后将实际上的组件实例保存到 fiber 对象中
+- 对于函数组件，就只是单纯的调用`YourComponentType(props)`函数
+
+### Component Types and Reconciliation  组件类型和协调阶段
+
+[React 为了高效的重渲染，会尽可能的复用已经存在的组件树和 dom 结构](https://reactjs.org/docs/reconciliation.html#elements-of-different-types)。对于相同组件树位置中相同类型的组件或者 HTML 节点的重渲染来说，React 会遵循这条原则而不是从头开始创建新的相同结构，意味着只要你继续让 React 渲染相同位置相同类型的组件，React 将始终保持该组件实例的存活。
+
+- 对于 class 组件来说，它实际上已经使用了相同的组件实例
+- 对于函数组件来说没有真正的“实例”，但是我们可以用`<MyFunctionComponent />`这种结构代表一种“这种类型的组件将在这里展示并且始终保持存活”的标记概念
+
+那么，React 怎么知道输出是何时并且如何发生实际改变的呢？
+
+React 的元素比对逻辑渲染逻辑基于类型字段优先的方式，使用 `===` 的方式进行比较。如果给定的元素已经变成了不同的类型，比如从 div 变成了 span，或者 componentA 变为 componentB，那么 React 便会假设整颗组件树都发生变化从而加速比对的过程。此时 React 将会销毁整颗已经存在的组件树，包括所有的 dom 节点，然后从头开始创建一个新的组件实例。
+
+这意味着渲染过程中一定要避免重新创建一个新的组件类型。每当你创建一个新的组件类型时，它都是一个不同的引用，将导致 React 重复的销毁和创建新的子组件树。
+
+换言之，避免：
+
+```jsx
+function ParentComponent() {
+  // This creates a new `ChildComponent` reference every time!
+  function ChildComponent() {}
+
+  return <ChildComponent />;
+}
+```
+
+如果要做，总是分开定义该组件：
+
+```jsx
+// This only creates one component type reference
+function ChildComponent() {}
+
+function ParentComponent() {
+  return <ChildComponent />;
+}
+```
 
 ### Keys and Reconciliation Keys 和协调
 
