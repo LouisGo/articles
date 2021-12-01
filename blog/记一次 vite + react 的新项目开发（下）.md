@@ -57,6 +57,11 @@ redux/mobx/recoil/unstated/context/
 
 ## react-query
 
+响应式
+基于Context Api
+结合hooks写法
+全局缓存
+
 ### 理念和动机
 
 ### 全局状态管理方案
@@ -71,4 +76,7 @@ redux/mobx/recoil/unstated/context/
 
 ### vue-router 的做法
 
+路由守卫勾子函数
 ### react-router 的做法
+
+HOC
