@@ -186,7 +186,84 @@ function ParentComponent() {
 
 ### Keys and Reconciliation Keys 和协调
 
+React 识别组件实例的另一种方式是使用 `key` 这个伪 prop。`key` 对于 React 来说更像是一种指令，它不会被传入真实的组件中，可以将 `key` 视为一种用来区分特定的组件实例类型的特殊标识符。
+
+key 的典型使用场景是渲染一个列表，用不会重复的 id 作为 key 值在这种场景下是很重要的，它将在列表项目发生排序、新增、删除时发挥重要作用，不到万不得已不要使用数组索引作为 key 值，否则可能会发生不可控的错误渲染、触发不必要的组件更新等等行为。
+
+当然 key 的使用场景远远不限于列表。比如你可以利用 key 来手动控制新旧组件实例的创建和销毁，像切换不同表单时就可以避免 React 复用过期的数据。
+
 ### Render Batching and Timing 批量更新及其时机
+
+默认情况下，每次调用 `setState()` React 都将开启一次新的渲染，同步的执行并返回。但是 React 也会以批量渲染的形式自动应用一系列的优化。所谓的批量渲染就是 `setState()` 的多次调用会导致单次渲染传递进入队列执行的方式，这一过程通常会带来轻微的延迟。这也正是为什么 React 官网说：[state 的更新可能是异步的](https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous)。
+
+值得注意的是，**在 React 的原生事件处理器中，React 会自动进行批量更新**。在一个典型的 React 应用中，事实 React 原生事件处理器是一个占比很大的组成部分，这意味着**大多数的数据更新实际上执行的都是批量更新机制**
+
+对于事件处理器，React 实现批量更新的方式是把它们包裹在一个叫做 `unstable_batchedUpdates`的内部函数中，当这个内部函数运行时，React 会追踪所有排好队等待更新的数据，然后在之后的一次渲染传递中运用它们的变化。对于事件处理器来说这一机制运行良好，因为 React 清楚的知道对于给定的事件哪个事件处理器将被调用。
+
+概念上来说，React 做的事其实就是下面这段伪代码：
+
+```jsx
+// PSEUDOCODE Not real, but kinda-sorta gives the idea
+function internalHandleEvent(e) {
+  const userProvidedEventHandler = findEventHandler(e);
+
+  let batchedUpdates = [];
+
+  unstable_batchedUpdates(() => {
+    // any updates queued inside of here will be pushed into batchedUpdates
+    userProvidedEventHandler(e);
+  });
+
+  renderWithQueuedStateUpdates(batchedUpdates);
+}
+```
+
+但是，**这同时意味着队列更新时任何当前调用栈之外的数据更新将不会参与到这次批量更新**。举例说明：
+
+```jsx
+const [counter, setCounter] = useState(0);
+
+const onClick = async () => {
+  setCounter(0);
+  setCounter(1);
+
+  const data = await fetchSomeData();
+
+  setCounter(2);
+  setCounter(3);
+};
+```
+
+思考一下以上代码会发生几次渲染呢？2 次？3 次？4 次？
+
+答案是 3 次。
+
+1. 首先`setCounter(0)`和`setCounter(1)`是发生在原生 react 事件处理器 onClick 中的两次 setter，因此他们都将进入`unstable_batchedUpdates()`，等待批量更新后合并为一次渲染
+2. 但是，`setCounter(2)`是在 `await` 之后执行的，这意味此时 onClick 的同步执行栈已经结束了，它将等待异步任务完成，并在另一次独立的事件循环中被调用。正因如此，React 不会把它放入原生事件的那次批量更新中，而是在未来的某个时刻让它再同步的执行一次属于自己的数据更新，这时候发生一次 counter 为 2 的渲染
+3. `setCounter(3)`就很好理解了，同 2 一样，发生一次 counter 为 3 的渲染
+
+提交阶段的生命周期函数如 `componentDisMount`、`componentDidUpdate`和`useLayoutEffect`中还存在一些额外的边界情况。这些大量存在的边界情况**允许你在一次 React 渲染行为之后，浏览器绘制之前执行额外的逻辑**，比如：
+
+- 用部分不完整的数据初始化渲染组件
+- 在提交阶段的生命周期函数中，利用 refs 去测量页面真实 dom 的尺寸大小
+- 根据上面测量的结果设置一些必要的值
+- 根据更新后的数据立即执行重渲染
+
+在这个案例中，我们其实并不想要初始状态中部分数据渲染的 UI 给用户看到，我们想要展现的是最终的效果。当 dom 结构被修改时，浏览器将会发生重新计算，但是实际上当 js 进程仍在执行并且阻塞着事件循环的时候，浏览器并不会进行任何绘制到屏幕上的操作。所以你可以在这个时候进行多次 dom 操作，比如`div.innerHTML = "a"; div.innerHTML = b";`，但此时"a"是永远不会出现在屏幕中的
+
+因为这点，React 在提交阶段的生命周期中总是会同步的执行渲染，那样，如果你尝试进行这样一次转换的更新行为："partial -> final（部分更新 -> 最终更新）"，最终显示在屏幕中的只会是"final"
+
+据我所知，`useEffect`回调函数中进行的数据更新也是队列更新，所有的`useEffect`回调执行一旦结束，就会在“副作用阶段”结束进行刷新
+
+值得注意的是，`unstable_batchedupdates` API 虽然是被公开导出的，但：
+
+- 顾名思义，它被标记为不稳定的 API，并且不是官方支持的 React API
+- 但是 React 团队说过它已经是所有不稳定 API 中最为稳定的了，Facebook（Meta）内部也有大半的代码简建立在这个 API 之上
+- `unstable_batchedupdates` 不像其他核心的 React API 一样被`react`包导出，它是一个特定的协调 API 并且不属于`react`包的部分。实际上它是由`react-dom`和`react-native`包导出的。这意味着其它协调包如`react-three-fiber`或者`ink`里，我们就不倾向于导出`unstable_batchedupdates`了。
+
+React-Redux V7 开始内部也开始使用这个 API。
+
+**在即将到来的 Concurrent 模式中，React 将会把所有更新行为都替换为批量更新，无论何时无论何地**
 
 ### Render Behavior Edge Cases 渲染行为的边界案例
 
