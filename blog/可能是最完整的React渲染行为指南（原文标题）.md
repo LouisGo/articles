@@ -267,32 +267,284 @@ React-Redux V7 开始内部也开始使用这个 API。
 
 ### Render Behavior Edge Cases 渲染行为的边界案例
 
+开发环境中，React 会对`<StrictMode>`标签里面的的组件进行两次渲染。这意味着此时渲染逻辑运行的次数和提交渲染的次数是不一样的，因此你不能用诸如`console.log()`等形式去判断实际的渲染发生情况。可以用 React DevTools Profiler 去捕获整体的提交渲染次数，或者在`useEffect`hook 和`componentDidMount/Update`生命周期函数中进行 log，这样的话记录的数量就对应的是真实完成一次渲染传递并且提交。
+
+前面说过，通常情况下你不能在实际渲染逻辑中触发队列更新。比如在一次 click 回调中调用一次`setSomeState()`这没问题，但是你不能把`setSomeState()`的调用作为实际渲染行为中的一部分
+
+然而这里也有一个例外，**函数组件可能会在渲染过程中直接调用`setSomeState()`，只要它是条件执行的并且不是每次渲染都执行**。这个函数组件的表现等同于`getDerivedStateFromProps`之于 class 组件。如果一个函数组件在渲染过程中队列更新，React 会立即应用这些更新并且同步的重渲染。如果一个组件持续不断的保持队列式更新并且强迫 React 进行重渲染，React 会在 50 次尝试后跳出循环并且抛出一个错误。这个技巧可以用于基于 props 的改变立即强制更新数据，就不用在`useEffect`内部调用`setSomeState()`进行重渲染了
+
 ## Improving Rendering Performance 提升渲染性能
+
+虽然渲染行为是一个正常的可预期的 React 运转组成部分，但是有时候渲染工作会进行无用功也是真实存在的。如果一个组件的渲染输出没有改变，那么对应部分的 dom 也不需要得到更新，那么 dom 更新之前的渲染工作貌似就是“无用功”了
+
+上文提到，React 的组件渲染输出总是依赖于当前的 props 和 state，因此如果我们提前知道 props 和 state 没有发生改变，那么渲染输出也就不会改变，此时我们可以安全的跳过该渲染
+
+以下有两条尝试改善软件系统性能的通用途径：
+
+1. 相同的工作提升速度
+2. 做更少的工作
+
+React 的渲染优化更多体现在通过跳过不必要的渲染从而做更少的工作上
 
 ### Component Render Optimization Techniques 组件渲染优化技巧
 
+React 主要提供了下面 3 个 API 用来跳过渲染：
+
+- `React.Component.shouldComponentUpdate`： 可选的 class 组件生命周期函数，会在渲染进程中提前调用，如果该函数的返回结果是`false`，React 就会跳过渲染这个组件。
+- `React.PureComponent`：当对 props 和 state 的比对在`shouldComponentUpdate`中变成最常见的实现时，`PureComponent`的出现把这个行为直接变成了默认行为，可以理解为`Component` + `shouldComponentUpdate`
+- `React.memo()`：内置的一个高阶函数。接收你的组件类型作为一个参数，然后返回一个包装后的组件。这个包装后的组件的默认会自动检查你的 props 是否发生了改变，如果没有则阻止往下重渲染。函数组件和 class 组件都可以用这个高阶函数。
+
+以上提到的这些途径都遵循“浅比较”的原则：两个不同对象中的每个单独字段都被拎出来进行检查，看看他们是否变成了不同的值。换言之，`obj1.a === obj2.a && obj1.b === obj2.b && ........`，这通常是一个很快速的过程，因为全等比较对于 js 引擎来说是很简单的操作。
+
+还有一个较少为人所知的技巧：如果 React 组件在其渲染输出结果中返回与之前完全相同的元素引用，那么 React 将会跳过该特定子树的渲染，只要有几种方式可以实现这项技巧：
+
+- 如果在输出中包含了`props.children`，此时组件内部发生数据变更，该 children 元素引用是不会发生改变的
+- 如果将某些元素用`useMemo`进行包装，也叫保持这份引用知道依赖数组发生改变
+
+举个例子：
+
+```jsx
+// counter 发生改变也不会引发 props.children 的重渲染
+function SomeProvider({ children }) {
+  const [counter, setCounter] = useState(0);
+
+  return (
+    <div>
+      <button onClick={() => setCounter(counter + 1)}>Count: {counter}</button>
+      <OtherChildComponent />
+      {children}
+    </div>
+  );
+}
+
+function OptimizedParent() {
+  const [counter1, setCounter1] = useState(0);
+  const [counter2, setCounter2] = useState(0);
+
+  const memoizedElement = useMemo(() => {
+    // This element stays the same reference if counter 2 is updated,
+    // 如果counter2发生改变，元素仍会保持相同的引用，不会触发重渲染
+    // 知道counter1发生改变
+    return <ExpensiveChildComponent />;
+  }, [counter1]);
+
+  return (
+    <div>
+      <button onClick={() => setCounter1(counter1 + 1)}>
+        Counter 1: {counter1}
+      </button>
+      <button onClick={() => setCounter1(counter2 + 1)}>
+        Counter 2: {counter2}
+      </button>
+      {memoizedElement}
+    </div>
+  );
+}
+```
+
+在这些技巧下，跳过组件渲染意味着 React 也将跳过渲染整颗不变的“子树”。它有效的停止了 React 的递归渲染子元素的行为。
+
 ### How New Props References Affect Render Optimizations 新 Props 的引用如何影响渲染优化
+
+前面说过，默认情况下，React 并不关心你传递的 props 是否一样，就只是拿 props 进行重渲染而已。因此底下的行为完全 ok:
+
+```jsx
+function ParentComponent() {
+  const onClick = () => {
+    console.log('Button clicked');
+  };
+
+  const data = { a: 1, b: 2 };
+
+  return <NormalChildComponent onClick={onClick} data={data} />;
+}
+```
+
+每次父组件渲染时都会创建一个全新的`onClick`函数和`data`对象引用，然后通过 props 传给底下的子组件
+
+这也意味着此时尝试优化宿主组件是没有意义的，比如把一个`<div></div>`或一个`<button></button>`包在`React.memo()`里，这些基础组件甚至没有子组件，因此渲染进程无论如何都会停止
+
+但是，如果子组件尝试通过检查 props 变更进行渲染优化，那么传递全新引用的 props 就能触发子组件的渲染。如果新的 prop 的引用确实指向新数据，这很棒。但是，如果父组件仅仅传递一个回调函数呢？
+
+```jsx
+const MemoizedChildComponent = React.memo(ChildComponent);
+
+function ParentComponent() {
+  const onClick = () => {
+    console.log('Button clicked');
+  };
+
+  const data = { a: 1, b: 2 };
+
+  return <MemoizedChildComponent onClick={onClick} data={data} />;
+}
+```
+
+现在，每次父组件渲染时，这些全新的引用将导致`MemoizedChildComponent`每次都看到的都是全新引用的 props，然后接着继续进行重渲染，即使`onClick`函数和`data`对象在我们看来每次都是同一件东西
+
+这意味着：
+
+- `MemoizedChildComponent`并不会如我们所愿跳过重渲染
+- 此时的新旧 props 比对是在浪费时间
+
+同样的，如果`MemoizedChildComponent`内部也有它的子组件，那么也逃不过强制重渲染的命运，因为这时的`props.children`始终也是新的引用
 
 ### Optimizing Props References 优化 Props 的引用
 
+class 组件不用担心上面这种情况，因为它们有自己的始终保持相同的引用的实例方法。但是，它们可能需要为不同的子列表项生成唯一的回调函数，或者在一个匿名函数中捕获值传递给这些子项，这种情况也会导致全新的引用。React 中并没有内置的东西可以帮助优化这个案例。
+
+函数组件中，React 则提供了`useMemo`和`useCallback`两个勾子函数：
+
+- `useMemo`：用于缓存一个新的对象或者复杂的计算的结果
+- `useCallback`：专门用来创建回调函数
+
 ### Memoize Everything? 万物皆可缓存？
+
+看前面的案例好像感受到 memo 香气四溢，那么问题来了：React 何不默认用 `React.memo()` 包裹所有组件呢？
+
+Dan 神对此类问题发表过评（fan）论（wen）：
+
+> Q: 为什么 React 不默认用 `memo()` 包裹所有组件？这样不会更快吗？不服跑个分？
+>
+> A: 为什么你不用 lodash 的 `memorize()` 包裹你所有的函数？这样不会让函数更快吗？不服跑个分？
+
+对此作者的想法是，由于比起不可变的数据更新，人们更愿意用数据突变的方式，因此默认 memo 所有组件是可能会引发问题的。但作者同样跟 Dan 神在 Twitter 上有过公开的讨论，他个人认为广泛使用 memo 整体上对应用带来的还是正向收益，[原文引用](https://twitter.com/acemarke/status/1141755698948165632)太长，总结以下几点：
+
+- 人们对于渲染和其带来的性能影响有群体误解，没错，React 是完全基于渲染的，但渲染一切就是原罪？不，绝大多数渲染其实并不昂贵
+- 不必要的渲染不是世界末日，也不是完全从根节点重渲染整个应用。如果这些“不必要的”重渲染没有带来实际 dom 的更新，那么就不用担心 CPU 被烧毁。这对大多数应用来说是问题吗？我觉得不是。那么有一些手段可以改善这种情况吗？也许吧
+- 默认重渲染一切的行为是不是有它的不足呢？当然，这就是为什么有`sCU`、`PureComponent`和`memo()`
+- **那么还是那个问题，该不该用`memo()`包住一切呢？**可能不用，但如果仅从性能指标需要的层面出发，难道它会对你的应用带来什么伤害吗？不，并且现实的来讲，我认为它能带来净收益（忽略 Dan 神关于比较浪费的观点）
+- 希望越来越多来自 React 团队或者大型开源社区的基准测试能揭示真正的答案，这样就可以避免对于这个问题无休止的争论，脐带~
+
+很遗憾，对于此现在暂时还没有出现有说服力的基准测试
+
+对于这个现状，Dan 神的标准答案是不同应用的结构和更新模式之间有着巨大的差异，所有很难给出具有代表性的基准测试。我始终认为一些实际的数字是有助于讨论的（打起来打起来）
 
 ### Immutability and Rerendering 不可变性和渲染
 
+在 React 中数据的变更需要始终保持是不可变（Immutably）的，有以下两条主要理由：
+
+- 如果需要取决于突变本身和突变的位置，可能会导致跟你渲染预期不一致的组件渲染行为
+- 关心数据什么时候以及为何发生变化都会带来困惑
+
+数据不可变更新是 React 单向数据流思想的灵魂，也是`React.memo`及类似的 API 依赖的浅比较操作的基石，一旦数据可变了（Mutable）了，那么这种比较没有任何意义（同一份引用），重渲染压根不会执行。
+
+比如我这样突变一个数组：
+
+```jsx
+const [todos, setTodos] = useState(someTodosArray);
+
+const onClick = () => {
+  todos[3].completed = true;
+  setTodos(todos);
+};
+```
+
+那么组件的重渲染是失效的，技术上来说，只有最外面的引用必须做到不可变的更新，改下上面的案例：
+
+```jsx
+const onClick = () => {
+  const newTodos = todos.slice();
+  newTodos[3].completed = true;
+  setTodos(newTodos);
+};
+```
+
+这时通过 slice 创建了一个新的数组引用，重渲染被触发了
+
+**基本底线：React 及其生态系统都奉行不可变更新的原则，任何时候你进行了可变的更新（突变），极有可能同时带来 bug，不要这么做**
+
 ### Measuring React Component Rendering Performance 衡量 React 组件渲染性能
+
+切记在**生产环境**去测量你的渲染性能
 
 ## Context and Rendering Behavior 上下文和渲染行为
 
-### Context Basics 上下文基础
+React 的 Context API 是一种为提供的单个值注入到组件所有层级子组件的机制，任何在`<MyContext.Provider>`标签下运行的子组件都被从上下文实例中读取到这个值，而不用通过 props 进行层层传递
+
+Context 并不是一个状态管理工具，你得自行管理这些传递的值。
 
 ### Updating Context Values 更新上下文的值
 
-### State Updates, Context, and Re-Renders 状态的更新、上下文以及重渲染
+React 会检查 Context 中 Provider 提供的值是否是新的引用，一旦发生变化，那么就认为上下文需要进行更新了
+
+```jsx
+function GrandchildComponent() {
+  const value = useContext(MyContext);
+  return <div>{value.a}</div>;
+}
+
+function ChildComponent() {
+  return <GrandchildComponent />;
+}
+
+function ParentComponent() {
+  const [a, setA] = useState(0);
+  const [b, setB] = useState('text');
+
+  const contextValue = { a, b };
+
+  return (
+    <MyContext.Provider value={contextValue}>
+      <ChildComponent />
+    </MyContext.Provider>
+  );
+}
+```
+
+这个例子中，每次`ParentComponent`进行渲染，React 会注意到`MyContext.Provider`已被提供一个新值，然后在向下循环的过程中找出所有`MyContext`的消费组件，当上下文 provider 得到一个新值时，所有消费组件都将进行重渲染
+
+注意在 React 的角度来看，每个上下文的 provider 只有一个值，不管是个对象、数组或者基础类型，都仅仅是一个上下文的值。目前来说，消费 Context 的组件是没有办法跳过这种数据更新的，尽管它可能只关心这个值的一部分数据
 
 ### Context Updates and Render Optimizations 上下文的更新和渲染优化
 
-## React-Redux and Rendering Behavior React-Redux 和渲染行为
+进行下面的优化：
 
-### React-Redux Subscriptions React-Redux 的订阅行为
+```jsx
+function GreatGrandchildComponent() {
+  return <div>Hi</div>
+}
 
-### Differences between connect and useSelector connect 和 useSelector 之间的差别
+function GrandchildComponent() {
+    const value = useContext(MyContext);
+    return (
+      <div>
+        {value.a}
+        <GreatGrandchildComponent />
+      </div>
+}
+
+function ChildComponent() {
+    return <GrandchildComponent />
+}
+
+const MemoizedChildComponent = React.memo(ChildComponent);
+
+function ParentComponent() {
+    const [a, setA] = useState(0);
+    const [b, setB] = useState("text");
+
+    const contextValue = {a, b};
+
+    return (
+      <MyContext.Provider value={contextValue}>
+        <MemoizedChildComponent />
+      </MyContext.Provider>
+    )
+}
+
+```
+
+此时如果我们调用`setA(42)`：
+
+- `ParentComponent`将会重渲染
+- 新的`contextValue`引用被创建
+- React 注意到`MyContext.Provider`有一个新的 context value，因此所有消费组件将会得到更新
+- React 尝试渲染`MemoizedChildComponent`，发现它被包进了`React.memo()`里，然而根本没有传递任何的 props，所以认为 props 并没有发生改变，整个跳过`ChildComponent`的渲染
+- 但是，由于`MyContext.Provider`有一个更新，因此更深层及可能有需要知道变化的组件
+- 于是 React 接着往下触达`GrandchildComponent`，这里发现`MyContext`被`GrandchildComponent`读取了，context 的值变了，因此这里需要对`GrandchildComponent`进行重渲染
+- 因为`GrandchildComponent`渲染了，因此 React 会继续往下渲染其内部的所有组件，`GreatGrandchildComponent`也被重渲染了
+
+## Summary 总结
+
+- 
